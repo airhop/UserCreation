@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="mystyle.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.min.js"></script>
+  <meta charset="utf-8">
+  <title>Users</title>
+
+<script>
+angular.module('app', [])
+  .controller('mainCtrl', mainCtrl)
+  .directive('avatar', avatarDirective);
+
+function mainCtrl ($scope) {
+
+  $scope.users = [];
+
+  $scope.addNew = function (user) {
+    $scope.users.push({ 
+      name: user.name,
+      avatarUrl: user.url
+    });
+    
+    user.name = '';
+    user.url = '';
+  };
+}
+function avatarDirective () {
+  return {
+    scope: {
+      user: '='
+    },
+    restrict: 'E',
+    template: ('<center><div class="form">' +
+      '<div class="Avatar">' +
+        '<br><img ng-src="{{user.avatarUrl}}" />' +
+        '<h4>{{user.name}}</h4>' +
+      '</div>'+
+	'</div></center><br>'
+    ), 
+    link: link
+  };
+  
+  function link (scope) { 
+    if (!scope.user.avatarUrl) {
+      scope.user.avatarUrl = 'http://thealmanac.org/assets/img/default_avatar.png';
+    }
+  }
+
+}
+</script>
+
+</head>
+<body>
+<center><div class="dark-matter">
+  <div ng-app='app' ng-controller='mainCtrl'>
+    <form name='userForm' ng-submit='addNew(userForm)'>
+	<h1>Create a new user!
+   	</h1>
+    <label>
+        <span>Your Name :</span>
+        <input id="name" type="text" name="name" placeholder="Your Full Name" ng-model='userForm.name' />
+    </label>
+    
+    <label>
+        <span>Your Desired Avatar Url :</span>
+        <input id="email" type="text" name="name" placeholder="Valid Avatar Url" ng-model='userForm.url'/>
+    </label>
+      <button class="button" type='submit'>Add New</button>
+    </form>
+    <br>
+<div class='User-list'>
+  <div ng-repeat='user in users'>
+    <avatar user='user' />
+  </div>
+</div></center>
+</body>
+</html>
